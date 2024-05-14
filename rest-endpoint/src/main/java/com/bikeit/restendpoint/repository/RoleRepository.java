@@ -1,10 +1,10 @@
 package com.bikeit.restendpoint.repository;
 
-import com.bikeit.restendpoint.model.User;
+import com.bikeit.restendpoint.model.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Long> {
-    User findByUsername(String username);
+public interface RoleRepository extends JpaRepository<Role, Long> {
+    Role findByName(String name);
 }
