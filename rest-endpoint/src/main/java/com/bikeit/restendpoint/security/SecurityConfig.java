@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -16,6 +15,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import static org.springframework.security.config.Customizer.withDefaults;
 
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -34,32 +34,27 @@ public class SecurityConfig {
 
     @Bean
     protected SecurityFilterChain configure(HttpSecurity http) throws Exception {
-        http = http.httpBasic(AbstractHttpConfigurer::disable)
-                .cors(Customizer.withDefaults())
-                .csrf(AbstractHttpConfigurer::disable);
+        http.httpBasic(AbstractHttpConfigurer::disable)
+            .cors(withDefaults())
+            .csrf(AbstractHttpConfigurer::disable);
 
-        http = http
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and();
+        http.sessionManagement((session)->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-        http = http
-                .exceptionHandling()
-                .authenticationEntryPoint((request, response, authException) -> {
+        http.exceptionHandling((exception)-> exception.authenticationEntryPoint((request, response, authException) -> {
                     System.out.println("Unauthorized request");
                     response.sendError(HttpServletResponse.SC_UNAUTHORIZED, authException.getMessage());
                 })
                 .accessDeniedHandler((request, response, ex) -> {
                     System.out.println("Unauthorized request");
                     response.sendError(HttpServletResponse.SC_FORBIDDEN, ex.getMessage());
-                })
-                .and();
+                }));
 
-
-        http.authorizeRequests()
-                .requestMatchers("/api/users").hasAuthority(Role.ROLE_ADMIN)
-                .requestMatchers("/auth/**").permitAll()
-                .anyRequest().authenticated();
+        http.authorizeHttpRequests((authz) -> authz
+                    .requestMatchers("/api/users").hasAuthority(Role.ROLE_ADMIN)
+                    .requestMatchers("/auth/**").permitAll()
+                    .anyRequest().authenticated()
+                )
+                .httpBasic(withDefaults());
 
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 

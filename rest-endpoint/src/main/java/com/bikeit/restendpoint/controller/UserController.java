@@ -23,16 +23,4 @@ public class UserController {
     public ResponseEntity<List<User>> getUsers() {
         return ResponseEntity.ok().body(userService.getAll());
     }
-
-    /*
-    @PostMapping("/register")
-    public User register(@RequestBody User user) {
-        return userService.registerUser(user.getUsername(), user.getPassword());
-    }
-
-    @PostMapping("/login")
-    public User login(@RequestBody User user) {
-        return userService.authenticate(user.getUsername(), user.getPassword());
-    }
-    */
 }
