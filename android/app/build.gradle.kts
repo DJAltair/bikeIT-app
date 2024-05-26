@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
 }
 
+val tomtomApiKey: String by project
+
 android {
     namespace = "com.example.bike_it"
     compileSdk = 34
@@ -16,7 +18,14 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    packaging {
+        jniLibs.pickFirsts.add("lib/**/libc++_shared.so")
+    }
+
     buildTypes {
+        configureEach {
+            buildConfigField("String", "TOMTOM_API_KEY", "\"$tomtomApiKey\"")
+        }
         release {
             isMinifyEnabled = false
             proguardFiles(
@@ -31,6 +40,7 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 }
 
@@ -46,4 +56,14 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+
+    val version = "1.4.0"
+    implementation("com.tomtom.sdk.navigation:navigation-online:$version")
+    implementation("com.tomtom.sdk.location:provider-android:$version")
+    implementation("com.tomtom.sdk.location:provider-map-matched:$version")
+    implementation("com.tomtom.sdk.location:provider-simulation:$version")
+    implementation("com.tomtom.sdk.maps:map-display:$version")
+    implementation("com.tomtom.sdk.datamanagement:navigation-tile-store:$version")
+    implementation("com.tomtom.sdk.navigation:ui:$version")
+    implementation("com.tomtom.sdk.routing:route-planner-online:$version")
 }

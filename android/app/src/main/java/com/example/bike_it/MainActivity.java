@@ -16,7 +16,17 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.bike_it.databinding.ActivityMainBinding;
 
+import com.tomtom.sdk.map.display.ui.MapFragment;
+import com.tomtom.sdk.map.display.TomTomMap;
+
+
+
 public class MainActivity extends AppCompatActivity {
+
+    // Note: BuildConfig.TOMTOM_API_KEY could potentially be null, ensure it's not null before use.
+    // TomTom APIs will not work without a valid API key. Navigation SDK is only avaialble upon request.
+    // Use the API key provided by TomTom to start using the SDK.
+    private TomTomMap tomtomMap;
 
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityMainBinding binding;
