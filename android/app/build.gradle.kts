@@ -25,6 +25,7 @@ android {
     buildTypes {
         configureEach {
             buildConfigField("String", "TOMTOM_API_KEY", "\"$tomtomApiKey\"")
+            resValue("string", "map_api_key", project.findProperty("tomtomApiKey") as String)
         }
         release {
             isMinifyEnabled = false
