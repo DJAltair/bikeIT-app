@@ -1,10 +1,8 @@
 package com.bikeit.restendpoint.controller;
 
-import com.auth0.jwt.JWT;
-import com.bikeit.restendpoint.model.LoginDto;
-import com.bikeit.restendpoint.model.RegistrationDto;
+import com.bikeit.restendpoint.model.Dto.LoginDto;
+import com.bikeit.restendpoint.model.Dto.RegistrationDto;
 import com.bikeit.restendpoint.model.User;
-import com.bikeit.restendpoint.security.JwtAuthenticationFilter;
 import com.bikeit.restendpoint.security.JwtTokenUtil;
 import com.bikeit.restendpoint.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -40,11 +38,11 @@ public class AuthController {
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(request.username(), request.password());
         Authentication authentication = authenticationManager.authenticate(token);
 
-       org.springframework.security.core.userdetails.User userDetails = (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
-       User user = userService.getByUsername(userDetails.getUsername());
+        org.springframework.security.core.userdetails.User userDetails = (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
+        User user = userService.getByUsername(userDetails.getUsername());
 
-       String accessToken = jwtTokenUtil.generateAccessToken(user);
-       String refreshToken = jwtTokenUtil.generateRefreshToken(user);
+        String accessToken = jwtTokenUtil.generateAccessToken(user);
+        String refreshToken = jwtTokenUtil.generateRefreshToken(user);
 
         Map<String, String> tokens = new HashMap<>();
         tokens.put("access_token", accessToken);

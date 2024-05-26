@@ -1,6 +1,6 @@
 package com.bikeit.restendpoint.service;
 
-import com.bikeit.restendpoint.model.RegistrationDto;
+import com.bikeit.restendpoint.model.Dto.RegistrationDto;
 import com.bikeit.restendpoint.model.Role;
 import com.bikeit.restendpoint.model.User;
 import com.bikeit.restendpoint.repository.UserRepository;
