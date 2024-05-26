@@ -45,7 +45,7 @@ public class SecurityConfig {
                     response.sendError(HttpServletResponse.SC_UNAUTHORIZED, authException.getMessage());
                 })
                 .accessDeniedHandler((request, response, ex) -> {
-                    System.out.println("Unauthorized request");
+                    System.out.println("Forbidden request");
                     response.sendError(HttpServletResponse.SC_FORBIDDEN, ex.getMessage());
                 }));
 

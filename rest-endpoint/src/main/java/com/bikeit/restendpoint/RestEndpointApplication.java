@@ -1,6 +1,6 @@
 package com.bikeit.restendpoint;
 
-import com.bikeit.restendpoint.model.RegistrationDto;
+import com.bikeit.restendpoint.model.Dto.RegistrationDto;
 import com.bikeit.restendpoint.service.RoleService;
 import com.bikeit.restendpoint.service.UserService;
 import org.springframework.boot.CommandLineRunner;
