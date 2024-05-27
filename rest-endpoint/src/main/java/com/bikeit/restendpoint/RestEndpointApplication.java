@@ -1,6 +1,10 @@
 package com.bikeit.restendpoint;
 
 import com.bikeit.restendpoint.model.Dto.RegistrationDto;
+import com.bikeit.restendpoint.model.Post;
+import com.bikeit.restendpoint.model.PrivacyStatus;
+import com.bikeit.restendpoint.repository.PostRepository;
+import com.bikeit.restendpoint.service.PostService;
 import com.bikeit.restendpoint.service.RoleService;
 import com.bikeit.restendpoint.service.UserService;
 import org.springframework.boot.CommandLineRunner;
@@ -33,7 +37,7 @@ public class RestEndpointApplication {
 	}
 
 	@Bean
-	CommandLineRunner run(UserService userService, RoleService roleService) {
+	CommandLineRunner run(UserService userService, RoleService roleService, PostRepository postRepository) {
 		return args -> {
 			Role roleAdmin = roleService.save(new Role(Role.ROLE_ADMIN));
 			Role roleUser = roleService.save(new Role(Role.ROLE_USER));
@@ -46,6 +50,10 @@ public class RestEndpointApplication {
 
 			userService.create(new RegistrationDto("DJAltair", "djaltair", "1234"), roles1);
 			userService.create(new RegistrationDto("Paloczek", "redskittlefox", "4321"), roles2);
+			postRepository.save(new Post("Wycieczka w góry", "Pojechałem z rodzinką w góry", userService.getByUsername("redskittlefox"), PrivacyStatus.PUBLIC));
+			postRepository.save(new Post("Wycieczka nad morze", "Pojechałem z rodzinką nad morze", userService.getByUsername("redskittlefox"), PrivacyStatus.PUBLIC));
+			postRepository.save(new Post("Wycieczka nad jezioro", "Pojechałem z rodzinką nad jezioro", userService.getByUsername("djaltair"), PrivacyStatus.PRIVATE));
+			postRepository.save(new Post("Wycieczka na Sybir", "Pojechałem z rodzinką na Sybir", userService.getByUsername("djaltair"), PrivacyStatus.PUBLIC));
 		};
 	}
 
