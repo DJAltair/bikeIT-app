@@ -44,11 +44,12 @@ public class AuthController {
         String accessToken = jwtTokenUtil.generateAccessToken(user);
         String refreshToken = jwtTokenUtil.generateRefreshToken(user);
 
-        Map<String, String> tokens = new HashMap<>();
-        tokens.put("access_token", accessToken);
-        tokens.put("refresh_token", refreshToken);
+        Map<String, String> response = new HashMap<>();
+        response.put("access_token", accessToken);
+        response.put("refresh_token", refreshToken);
+        response.put("user_id", String.valueOf(user.getId()));
 
-        return ResponseEntity.ok().body(tokens);
+        return ResponseEntity.ok().body(response);
     }
 
     @PostMapping("refresh")

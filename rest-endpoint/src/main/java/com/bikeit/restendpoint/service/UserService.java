@@ -61,6 +61,7 @@ public class UserService implements UserDetailsService {
     }
 
     public User create(RegistrationDto request) {
+        if(userRepository.existsByUsername(request.username())) { return null; }
         List<Role> roles = new ArrayList<>();
         try {
             roles.add(roleService.getByName(Role.ROLE_USER));
@@ -69,6 +70,7 @@ public class UserService implements UserDetailsService {
     }
 
     public User create(RegistrationDto request, List<Role> roles) {
+        if(userRepository.existsByUsername(request.username())) { return null; }
         User user = new User(request.name(), request.username(), passwordEncoder.encode(request.password()), roles);
         save(user);
         return user;
