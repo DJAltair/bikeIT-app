@@ -167,6 +167,7 @@ public class LoginActivity extends AppCompatActivity {
                             .putBoolean("logged_in", true)
                             .putString("access_token", response.body().getAccessToken())
                             .putString("refresh_token", response.body().getRefreshToken())
+                            .putInt("user_id",  response.body().user_id)
                             .apply();
 
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
