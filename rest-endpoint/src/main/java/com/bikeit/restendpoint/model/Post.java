@@ -21,6 +21,8 @@ public class Post {
     @Lob
     private String content;
 
+    private PrivacyStatus postPrivacy;
+
     private LocalDateTime createdAt;
 
     @ManyToOne
@@ -28,14 +30,13 @@ public class Post {
     @JsonIgnore
     private User user;
 
-    // Constructors, getters, and setters
-
     public Post() {}
 
-    public Post(String title, String content, User user) {
+    public Post(String title, String content, User user, PrivacyStatus postPrivacy) {
         this.title = title;
         this.content = content;
         this.user = user;
+        this.postPrivacy = postPrivacy;
         this.createdAt = LocalDateTime.now();
     }
 }

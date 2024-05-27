@@ -2,6 +2,7 @@ package com.bikeit.restendpoint.security;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.bikeit.restendpoint.model.User;
 import org.springframework.stereotype.Component;
 
@@ -49,7 +50,7 @@ public class JwtTokenUtil {
                 return true;
             }
         } catch (IllegalArgumentException e){
-            System.out.println(String.format("JWT is invalid - {%s}", e.getMessage()));
+            System.out.printf("JWT is invalid - {%s}%n", e.getMessage());
         }
         return false;
     }

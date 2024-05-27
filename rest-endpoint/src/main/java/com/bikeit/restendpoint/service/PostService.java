@@ -2,18 +2,19 @@ package com.bikeit.restendpoint.service;
 
 import com.bikeit.restendpoint.model.Dto.PostDto;
 import com.bikeit.restendpoint.model.Post;
+import com.bikeit.restendpoint.model.PrivacyStatus;
+import com.bikeit.restendpoint.model.Role;
 import com.bikeit.restendpoint.model.User;
 import com.bikeit.restendpoint.repository.PostRepository;
 import com.bikeit.restendpoint.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.Set;
 
 @Service
 public class PostService {
@@ -27,15 +28,39 @@ public class PostService {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private FriendshipService friendshipService;
+
     public List<PostDto> getAllPosts() {
+        String currentUsername = userService.getCurrentUsername();
+        User currentUser = userRepository.findByUsername(currentUsername);
+
         return postRepository.findAll().stream()
+                .filter(post -> canViewPost(post, currentUser))
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
 
     public Optional<PostDto> getPostById(Long id) {
+        String currentUsername = userService.getCurrentUsername();
+        User currentUser = userRepository.findByUsername(currentUsername);
+
         return postRepository.findById(id)
+                .filter(post -> canViewPost(post, currentUser))
                 .map(this::convertToDto);
+    }
+
+    private boolean canViewPost(Post post, User currentUser) {
+        if (post.getPostPrivacy() == PrivacyStatus.PUBLIC) {
+            return true;
+        }
+
+        if (currentUser.equals(post.getUser()) || RoleService.hasRole("ROLE_ADMIN")) {
+            return true;
+        }
+
+        Set<User> friends = friendshipService.getFriends(post.getUser());
+        return friends.contains(currentUser);
     }
 
     public PostDto createPost(Post post) {
@@ -87,7 +112,8 @@ public class PostService {
                 post.getTitle(),
                 post.getContent(),
                 post.getCreatedAt(),
-                post.getUser().getUsername()
+                post.getUser().getUsername(),
+                post.getPostPrivacy()
         );
     }
 }

@@ -19,6 +19,4 @@ public class Friendship {
     private User receiver;
 
     private FriendshipStatus status;
-
-    // Getters and setters
 }

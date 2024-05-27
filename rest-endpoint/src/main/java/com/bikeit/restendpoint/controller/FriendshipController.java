@@ -1,6 +1,5 @@
 package com.bikeit.restendpoint.controller;
 
-import com.bikeit.restendpoint.exceptions.UserNotFoundException;
 import com.bikeit.restendpoint.model.User;
 import com.bikeit.restendpoint.repository.UserRepository;
 import com.bikeit.restendpoint.service.FriendshipService;

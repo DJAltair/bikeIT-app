@@ -1,7 +1,5 @@
 package com.bikeit.restendpoint.controller;
 
-import com.bikeit.restendpoint.exceptions.FriendshipNotFoundException;
-import com.bikeit.restendpoint.exceptions.UserNotFoundException;
 import com.bikeit.restendpoint.model.Dto.FriendChoiceDto;
 import com.bikeit.restendpoint.model.Dto.FriendRequestDto;
 import com.bikeit.restendpoint.model.Friendship;
@@ -11,10 +9,12 @@ import com.bikeit.restendpoint.repository.UserRepository;
 import com.bikeit.restendpoint.service.FriendRequestService;
 import com.bikeit.restendpoint.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/friend-requests")
@@ -28,55 +28,68 @@ public class FriendRequestController {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private FriendshipRepository friendshipRepository;
-
     @PostMapping("/send")
     public ResponseEntity<?> sendFriendRequest(@RequestBody FriendRequestDto friendRequestDto) {
-        Long senderId = friendRequestDto.getSenderId();
-        Long receiverId = friendRequestDto.getReceiverId();
+        try {
+            Long senderId = friendRequestDto.getSenderId();
+            Long receiverId = friendRequestDto.getReceiverId();
 
-        User sender = userRepository.findById(senderId).orElseThrow(() -> new UserNotFoundException(senderId));
+            Optional<User> sender = userRepository.findById(senderId);
+            Optional<User> receiver = userRepository.findById(receiverId);
 
-        String username = userService.getCurrentUsername();
-        User currentUser = userRepository.findByUsername(username);
+            if(sender.isEmpty() || receiver.isEmpty()) throw new IllegalArgumentException("Sender or receiver doesn't exist!");
 
-        if (!sender.getId().equals(currentUser.getId())) {
-            return ResponseEntity.status(403).build();
+            String username = userService.getCurrentUsername();
+            User currentUser = userRepository.findByUsername(username);
+
+            if (!sender.get().getId().equals(currentUser.getId())) {
+                throw new IllegalArgumentException("Current user isn't the sender!");
+            }
+
+            friendRequestService.sendFriendRequest(sender.get(), receiver.get());
+            return ResponseEntity.ok().build();
+
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         }
-
-        User receiver = userRepository.findById(receiverId).orElseThrow(() -> new UserNotFoundException(receiverId));
-
-        friendRequestService.sendFriendRequest(sender, receiver);
-        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/accept")
     public ResponseEntity<?> acceptFriendRequest(@RequestBody FriendChoiceDto friendChoiceDto) {
-        Long friendshipId = friendChoiceDto.getFriendshipId();
+        try {
+            Long friendshipId = friendChoiceDto.getFriendshipId();
 
-        String username = userService.getCurrentUsername();
-        User currentUser = userRepository.findByUsername(username);
+            String username = userService.getCurrentUsername();
+            User currentUser = userRepository.findByUsername(username);
 
-        Friendship friendship = friendshipRepository.findById(friendshipId)
-                .orElseThrow(() -> new FriendshipNotFoundException(friendshipId));
+            friendRequestService.acceptFriendRequest(currentUser, friendshipId);
+            return ResponseEntity.ok().build();
 
-        friendRequestService.acceptFriendRequest(currentUser, friendshipId);
-        return ResponseEntity.ok().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        }
     }
 
     @PostMapping("/decline")
     public ResponseEntity<?> declineFriendRequest(@RequestBody FriendChoiceDto friendChoiceDto) {
-        Long friendshipId = friendChoiceDto.getFriendshipId();
+        try {
+            Long friendshipId = friendChoiceDto.getFriendshipId();
 
-        String username = userService.getCurrentUsername();
-        User currentUser = userRepository.findByUsername(username);
+            String username = userService.getCurrentUsername();
+            User currentUser = userRepository.findByUsername(username);
 
-        Friendship friendship = friendshipRepository.findById(friendshipId)
-                .orElseThrow(() -> new FriendshipNotFoundException(friendshipId));
+            friendRequestService.declineFriendRequest(currentUser, friendshipId);
+            return ResponseEntity.ok().build();
 
-        friendRequestService.declineFriendRequest(currentUser, friendshipId);
-        return ResponseEntity.ok().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        }
     }
 
     @GetMapping("/show")
