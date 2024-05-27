@@ -2,6 +2,8 @@ package com.example.bike_it.responses;
 
 public class LoginResponse {
     private boolean success;
+
+    public int user_id = -1;
     private String access_token;
     private String refresh_token;
 

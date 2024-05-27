@@ -8,6 +8,7 @@ import android.view.Menu;
 
 import com.example.bike_it.requests.LoginRequest;
 import com.example.bike_it.requests.RefreshRequest;
+import com.example.bike_it.responses.ApiUserIDResponse;
 import com.example.bike_it.responses.LoginResponse;
 import com.example.bike_it.responses.RefreshResponse;
 import com.google.android.material.snackbar.Snackbar;
@@ -22,6 +23,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.widget.Button;
 import android.widget.Toast;
+import android.widget.TextView;
 
 import com.example.bike_it.databinding.ActivityMainBinding;
 
@@ -81,7 +83,61 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+
+        if(isLoggedIn())
+        {
+            updateProfileInformation();
+        }
     }
+
+    private void updateProfileInformation()
+    {
+        NavigationView navigationView = binding.navView;
+        View headerView = navigationView.getHeaderView(0);
+
+        // Get the TextViews from the header layout
+        TextView navHeaderTitle = headerView.findViewById(R.id.nav_header_title);
+        TextView navHeaderSubtitle = headerView.findViewById(R.id.nav_header_subtitle);
+
+        int user_id = getSharedPreferences("user_prefs", MODE_PRIVATE)
+                .getInt("user_id", -1);
+
+        if(user_id == -1)
+        {
+            navHeaderTitle.setText("Anonymous");
+            navHeaderSubtitle.setText("Anonymous");
+            return;
+        }
+
+        // Set the name and email
+        ApiService apiService = ApiClient.getRetrofitInstance().create(ApiService.class);
+        RefreshRequest refreshRequest = new RefreshRequest();
+
+        Call<ApiUserIDResponse> call = apiService.userProfile(Integer.toString(user_id));
+        call.enqueue(new Callback<ApiUserIDResponse>() {
+            @Override
+            public void onResponse(Call<ApiUserIDResponse> call, Response<ApiUserIDResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    // Handle successful login
+                    navHeaderTitle.setText(response.body().name);
+                    navHeaderSubtitle.setText(response.body().username);
+                } else {
+                    navHeaderTitle.setText("<network error>");
+                    navHeaderSubtitle.setText("<network error>");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ApiUserIDResponse> call, Throwable t) {
+                // Handle network failure
+                Toast.makeText(MainActivity.this, "Network error", Toast.LENGTH_SHORT).show();
+                Log.e("LoginActivity", "onFailure: " + t.getMessage());
+
+                logout();
+            }
+        });
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -171,6 +227,7 @@ public class MainActivity extends AppCompatActivity {
                 .putBoolean("logged_in", false)
                 .putString("access_token", null)
                 .putString("refresh_token", null)
+                .putInt("user_id", -1)
                 .apply();
 
         Intent intent = new Intent(this, LoginActivity.class);
