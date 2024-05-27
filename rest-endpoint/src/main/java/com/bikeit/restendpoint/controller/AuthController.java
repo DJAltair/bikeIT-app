@@ -8,6 +8,7 @@ import com.bikeit.restendpoint.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/auth")
@@ -74,7 +76,9 @@ public class AuthController {
     }
 
     @PostMapping("register")
-    public User register(@RequestBody RegistrationDto request) {
-        return userService.create(request);
+    public ResponseEntity<?> register(@RequestBody RegistrationDto request) {
+        Optional<User> user = Optional.ofNullable(userService.create(request));
+        if(user.isPresent()) { return ResponseEntity.ok(user.get()); }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User registration failed, username already used!");
     }
 }
