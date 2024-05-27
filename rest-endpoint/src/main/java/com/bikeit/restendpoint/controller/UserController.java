@@ -1,12 +1,16 @@
 package com.bikeit.restendpoint.controller;
 
+import com.bikeit.restendpoint.model.Dto.UpdateUserProfileDto;
+import com.bikeit.restendpoint.model.Dto.UserProfileDto;
 import com.bikeit.restendpoint.model.User;
 import com.bikeit.restendpoint.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -22,5 +26,21 @@ public class UserController {
     @GetMapping("/users")
     public ResponseEntity<List<User>> getUsers() {
         return ResponseEntity.ok().body(userService.getAll());
+    }
+
+    @GetMapping("/user/{id}")
+    public ResponseEntity<UserProfileDto> getUserProfileById(@PathVariable Long id) {
+        Optional<UserProfileDto> userProfile = userService.getUserProfileById(id);
+        return userProfile.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @PutMapping("/user/{id}")
+    public ResponseEntity<UserProfileDto> updateUserProfile(@PathVariable Long id, @RequestBody UpdateUserProfileDto updateUserProfileDto) {
+        try {
+            Optional<UserProfileDto> updatedProfile = userService.updateUserProfile(id, updateUserProfileDto);
+            return updatedProfile.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        } catch (SecurityException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
     }
 }
