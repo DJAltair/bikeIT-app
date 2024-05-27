@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -38,6 +39,10 @@ public class SecurityConfig {
             .cors(withDefaults())
             .csrf(AbstractHttpConfigurer::disable);
 
+        http.headers(headers -> headers
+                .frameOptions(HeadersConfigurer.FrameOptionsConfig::disable)
+        );
+
         http.sessionManagement((session)->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         http.exceptionHandling((exception)-> exception.authenticationEntryPoint((request, response, authException) -> {
@@ -52,7 +57,8 @@ public class SecurityConfig {
         http.authorizeHttpRequests((authz) -> authz
                     .requestMatchers("/api/users").hasAuthority(Role.ROLE_ADMIN)
                     .requestMatchers("/auth/**").permitAll()
-                    .anyRequest().authenticated()
+                    .requestMatchers("/api/**").authenticated()
+                    .anyRequest().permitAll()
                 )
                 .httpBasic(withDefaults());
 

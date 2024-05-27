@@ -30,12 +30,20 @@ public class User {
     private Set<Post> posts = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.EAGER)
+    @JsonIgnore
     @JoinTable(
             name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Collection<Role> roles = new ArrayList<>();
+
+    @ManyToMany
+    @JsonIgnore
+    @JoinTable(name = "friendships",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "friend_id"))
+    private Set<User> friends = new HashSet<>();
 
     public User() {}
 
@@ -46,7 +54,6 @@ public class User {
         this.roles = roles;
     }
 
-    // Add convenience method to add a post
     public void addPost(Post post) {
         posts.add(post);
         post.setUser(this);

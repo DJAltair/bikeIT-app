@@ -24,6 +24,9 @@ public class PostService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private UserService userService;
+
     public List<PostDto> getAllPosts() {
         return postRepository.findAll().stream()
                 .map(this::convertToDto)
@@ -36,7 +39,7 @@ public class PostService {
     }
 
     public PostDto createPost(Post post) {
-        String username = getCurrentUsername();
+        String username = userService.getCurrentUsername();
         User user = userRepository.findByUsername(username);
         if (user == null) {
             throw new IllegalArgumentException("User not found");
@@ -48,7 +51,7 @@ public class PostService {
     }
 
     public PostDto updatePost(Long id, Post postDetails) {
-        String username = getCurrentUsername();
+        String username = userService.getCurrentUsername();
         Optional<Post> optionalPost = postRepository.findById(id);
         if (optionalPost.isPresent()) {
             Post post = optionalPost.get();
@@ -68,22 +71,13 @@ public class PostService {
         Optional<Post> optionalPost = postRepository.findById(postId);
         if (optionalPost.isPresent()) {
             Post post = optionalPost.get();
-            if (RoleService.hasRole("ROLE_ADMIN") || post.getUser().getUsername().equals(getCurrentUsername())) {
+            if (RoleService.hasRole("ROLE_ADMIN") || post.getUser().getUsername().equals(userService.getCurrentUsername())) {
                 postRepository.delete(post);
             } else {
                 throw new SecurityException("You are not authorized to delete this post");
             }
         } else {
             throw new IllegalArgumentException("Post not found");
-        }
-    }
-
-    private String getCurrentUsername() {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (principal instanceof UserDetails) {
-            return ((UserDetails) principal).getUsername();
-        } else {
-            return principal.toString();
         }
     }
 
