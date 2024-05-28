@@ -41,6 +41,17 @@ public class PostService {
                 .collect(Collectors.toList());
     }
 
+    public List<PostDto> getPostsByUsername(String username) {
+        String currentUsername = userService.getCurrentUsername();
+        User currentUser = userRepository.findByUsername(currentUsername);
+
+        return postRepository.findAll().stream()
+                .filter(post -> canViewPost(post, currentUser))
+                .filter(post -> postByUsername(post, username))
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
+
     public Optional<PostDto> getPostById(Long id) {
         String currentUsername = userService.getCurrentUsername();
         User currentUser = userRepository.findByUsername(currentUsername);
@@ -61,6 +72,10 @@ public class PostService {
 
         Set<User> friends = friendshipService.getFriends(post.getUser());
         return friends.contains(currentUser);
+    }
+
+    private boolean postByUsername(Post post, String username) {
+        return post.getUser().getUsername().equals(username);
     }
 
     public PostDto createPost(Post post) {
@@ -113,7 +128,8 @@ public class PostService {
                 post.getContent(),
                 post.getCreatedAt(),
                 post.getUser().getUsername(),
-                post.getPostPrivacy()
+                post.getPostPrivacy(),
+                post.getImageBase64()
         );
     }
 }

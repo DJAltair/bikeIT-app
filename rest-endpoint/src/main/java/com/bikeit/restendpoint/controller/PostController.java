@@ -11,24 +11,29 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/posts")
+@RequestMapping("/api")
 public class PostController {
 
     @Autowired
     private PostService postService;
 
-    @GetMapping
+    @GetMapping("/posts")
     public List<PostDto> getAllPosts() {
         return postService.getAllPosts();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/post/{id}")
     public ResponseEntity<PostDto> getPostById(@PathVariable Long id) {
         Optional<PostDto> post = postService.getPostById(id);
         return post.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @PostMapping
+    @GetMapping("/posts/{username}")
+    public List<PostDto> getPostsByUsername(@PathVariable String username) {
+        return postService.getPostsByUsername(username);
+    }
+
+    @PostMapping("/post")
     public ResponseEntity<PostDto> createPost(@RequestBody Post post) {
         try {
             PostDto createdPost = postService.createPost(post);
@@ -38,7 +43,7 @@ public class PostController {
         }
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/post/{id}")
     public ResponseEntity<PostDto> updatePost(@PathVariable Long id, @RequestBody Post postDetails) {
         try {
             PostDto updatedPost = postService.updatePost(id, postDetails);
@@ -50,7 +55,7 @@ public class PostController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/post/{id}")
     public ResponseEntity<Void> deletePost(@PathVariable Long id) {
         try {
             postService.deletePost(id);

@@ -21,6 +21,9 @@ public class Post {
     @Lob
     private String content;
 
+    @Lob
+    private String imageBase64;
+
     private PrivacyStatus postPrivacy;
 
     private LocalDateTime createdAt;

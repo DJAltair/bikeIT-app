@@ -28,16 +28,16 @@ public class UserController {
         return ResponseEntity.ok().body(userService.getAll());
     }
 
-    @GetMapping("/user/{id}")
-    public ResponseEntity<UserProfileDto> getUserProfileById(@PathVariable Long id) {
-        Optional<UserProfileDto> userProfile = userService.getUserProfileById(id);
+    @GetMapping("/profile/{username}")
+    public ResponseEntity<UserProfileDto> getUserProfileByUsername(@PathVariable String username) {
+        Optional<UserProfileDto> userProfile = userService.getUserProfileById(username);
         return userProfile.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @PutMapping("/user/{id}")
-    public ResponseEntity<UserProfileDto> updateUserProfile(@PathVariable Long id, @RequestBody UpdateUserProfileDto updateUserProfileDto) {
+    @PutMapping("/profile/{username}")
+    public ResponseEntity<UserProfileDto> updateUserProfile(@PathVariable String username, @RequestBody UpdateUserProfileDto updateUserProfileDto) {
         try {
-            Optional<UserProfileDto> updatedProfile = userService.updateUserProfile(id, updateUserProfileDto);
+            Optional<UserProfileDto> updatedProfile = userService.updateUserProfile(username, updateUserProfileDto);
             return updatedProfile.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
         } catch (SecurityException e) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();

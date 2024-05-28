@@ -85,36 +85,42 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    public Optional<UserProfileDto> getUserProfileById(Long id) {
-        return userRepository.findById(id)
-                .map(user -> {
-                    UserProfileDto userProfileDto = new UserProfileDto();
-                    userProfileDto.setUsername(user.getUsername());
-                    userProfileDto.setName(user.getName());
-                    userProfileDto.setDescription(user.getDescription());
-                    return userProfileDto;
-                });
+    public Optional<UserProfileDto> getUserProfileById(String username) {
+        User user = userRepository.findByUsername(username);
+        if (user != null) {
+            UserProfileDto userProfileDto = new UserProfileDto();
+            userProfileDto.setUsername(user.getUsername());
+            userProfileDto.setName(user.getName());
+            userProfileDto.setDescription(user.getDescription());
+            return Optional.of(userProfileDto);
+        } else {
+            return Optional.empty();
+        }
     }
 
     @Transactional
-    public Optional<UserProfileDto> updateUserProfile(Long id, UpdateUserProfileDto updateUserProfileDto) {
+    public Optional<UserProfileDto> updateUserProfile(String username, UpdateUserProfileDto updateUserProfileDto) {
         String currentUsername = getCurrentUsername();
-        User currentUser = userRepository.findByUsername(currentUsername);
 
-        return userRepository.findById(id).map(user -> {
-            if (!user.getUsername().equals(currentUsername)) {
-                throw new SecurityException("You are not authorized to update this profile.");
-            }
-            user.setName(updateUserProfileDto.getName());
-            user.setDescription(updateUserProfileDto.getDescription());
-            userRepository.save(user);
+        User user = userRepository.findByUsername(username);
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found");
+        }
 
-            UserProfileDto updatedProfile = new UserProfileDto();
-            updatedProfile.setUsername(user.getUsername());
-            updatedProfile.setName(user.getName());
-            updatedProfile.setDescription(user.getDescription());
+        if (!user.getUsername().equals(currentUsername)) {
+            throw new SecurityException("You are not authorized to update this profile.");
+        }
 
-            return updatedProfile;
-        });
+        user.setName(updateUserProfileDto.getName());
+        user.setDescription(updateUserProfileDto.getDescription());
+
+        userRepository.save(user);
+
+        UserProfileDto updatedProfile = new UserProfileDto();
+        updatedProfile.setUsername(user.getUsername());
+        updatedProfile.setName(user.getName());
+        updatedProfile.setDescription(user.getDescription());
+
+        return Optional.of(updatedProfile);
     }
 }
