@@ -2,6 +2,7 @@ package com.example.bike_it;
 
 import android.content.SharedPreferences;
 import android.content.Context;
+import android.renderscript.ScriptGroup;
 
 import com.example.bike_it.AuthInterceptor;
 
@@ -11,16 +12,18 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 import java.io.InputStream;
 import java.security.KeyStore;
+import java.security.SecureRandom;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateFactory;
 
+import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
 
 public class ApiClient {
-    private static final String BASE_URL = "https://bikeit.redskittlefox.com";
+    private static final String BASE_URL = "https://192.168.0.25:8443";
     private static SharedPreferences sharedPreferences;
     private static Retrofit retrofit;
 
@@ -43,40 +46,28 @@ public class ApiClient {
 
             ApiService apiService = tokenRetrofit.create(ApiService.class);
 
-            // Load the BKS keystore
-            KeyStore keyStore = KeyStore.getInstance("BKS");
-            // Ensure the keystore.bks file is in the res/raw directory
-            InputStream in = context.getResources().openRawResource(R.raw.keystore); // keystore.bks in res/raw
-            keyStore.load(in, "ZfkV98jAVEiZeLaWmmAE".toCharArray()); // "keystore_password" is the password used when creating the BKS keystore
+            InputStream keyStoreInputStream = context.getResources().openRawResource(R.raw.client_identity);
+            InputStream trustStoreInputStream = context.getResources().openRawResource(R.raw.client_truststore);
 
-            // Create a TrustManager that trusts the CAs in our KeyStore
-            TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
-            tmf.init(keyStore);
-            X509TrustManager trustManager = (X509TrustManager) tmf.getTrustManagers()[0];
+            KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+            keyStore.load(keyStoreInputStream, "secret".toCharArray());
 
-            // Create an SSLContext that uses our TrustManager
-            CertificateFactory cf = CertificateFactory.getInstance("X.509");
-            InputStream caInput = context.getResources().openRawResource(R.raw.ca_bundle);
-            Certificate ca;
-            try {
-                ca = cf.generateCertificate(caInput);
-            } finally {
-                caInput.close();
-            }
+            KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
+            trustStore.load(trustStoreInputStream, "secret".toCharArray());
 
-            // Create a KeyStore containing our trusted CA
+            KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
+            keyManagerFactory.init(keyStore, "secret".toCharArray());
 
-            // Create a TrustManager that trusts the CAs in our KeyStore
-            TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
-            tmf.init(keyStore);
-            TrustManager[] trustManagers = tmf.getTrustManagers();
+            TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+            trustManagerFactory.init(trustStore);
 
             SSLContext sslContext = SSLContext.getInstance("TLS");
-            sslContext.init(null, new javax.net.ssl.TrustManager[]{trustManager}, null);
+            sslContext.init(keyManagerFactory.getKeyManagers(), trustManagerFactory.getTrustManagers(), new SecureRandom());
+
 
             // Create and return an OkHttpClient that uses the SSLContext
             return new OkHttpClient.Builder()
-                    .sslSocketFactory(sslContext.getSocketFactory(), trustManager)
+                    .sslSocketFactory(sslContext.getSocketFactory(), (X509TrustManager) trustManagerFactory.getTrustManagers()[0])
                     .addInterceptor(new AuthInterceptor(sharedPreferences))
                     .authenticator(new TokenAuthenticator(apiService, sharedPreferences))
                     .build();
