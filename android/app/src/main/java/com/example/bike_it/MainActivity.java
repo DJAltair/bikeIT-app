@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ApiClient.createRetrofitInstance(getSharedPreferences("user_prefs", MODE_PRIVATE));
+        ApiClient.createRetrofitInstance(getSharedPreferences("user_prefs", MODE_PRIVATE), ApiClient.getSecureOkHttpClient(this));
 
         tryRefreshToken();
 
