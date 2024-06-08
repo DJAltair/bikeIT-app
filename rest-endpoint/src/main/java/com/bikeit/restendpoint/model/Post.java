@@ -35,11 +35,12 @@ public class Post {
 
     public Post() {}
 
-    public Post(String title, String content, User user, PrivacyStatus postPrivacy) {
+    public Post(String title, String content, User user, PrivacyStatus postPrivacy, String imageBase64) {
         this.title = title;
         this.content = content;
         this.user = user;
         this.postPrivacy = postPrivacy;
         this.createdAt = LocalDateTime.now();
+        this.imageBase64 = imageBase64;
     }
 }

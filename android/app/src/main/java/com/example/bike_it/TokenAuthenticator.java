@@ -36,6 +36,7 @@ public class TokenAuthenticator implements Authenticator {
             }
 
             Call<RefreshResponse> call = apiService.refreshToken(new RefreshRequest());
+            //tu coś się rozpierdala w refresh
             retrofit2.Response<RefreshResponse> refreshResponse = call.execute();
 
             if (refreshResponse.isSuccessful() && refreshResponse.body() != null) {
