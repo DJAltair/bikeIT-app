@@ -12,6 +12,7 @@ import com.example.bike_it.requests.RefreshRequest;
 import com.example.bike_it.responses.ApiUserIDResponse;
 import com.example.bike_it.responses.LoginResponse;
 import com.example.bike_it.responses.RefreshResponse;
+import com.example.bike_it.ui.profile.ProfileActivity;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
@@ -115,7 +116,6 @@ public class MainActivity extends AppCompatActivity {
 
         // Set the name and email
         ApiService apiService = ApiClient.getRetrofitInstance().create(ApiService.class);
-        RefreshRequest refreshRequest = new RefreshRequest();
 
         Call<ApiUserIDResponse> call = apiService.userProfile(user_id);
         call.enqueue(new Callback<ApiUserIDResponse>() {
@@ -142,6 +142,19 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    public void showCurrentProfile(View view)
+    {
+        Intent i = new Intent(this, ProfileActivity.class);
+
+        String username = getSharedPreferences("user_prefs", MODE_PRIVATE)
+                .getString("username", null);
+
+        if(username == null)
+            return;
+
+        i.putExtra("profile_username", username);
+        startActivity(i);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

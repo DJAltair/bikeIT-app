@@ -32,4 +32,7 @@ public interface ApiService {
 
     @GET("api/posts")
     Call<List<ApiPostsResponse>> getPosts();
+
+    @GET("api/posts/{username}")
+    Call<List<ApiPostsResponse>> getPostsUsername(@Path("username") String username);
 }
