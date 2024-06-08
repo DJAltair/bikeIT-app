@@ -165,6 +165,7 @@ public class LoginActivity extends AppCompatActivity {
                     getSharedPreferences("user_prefs", MODE_PRIVATE)
                             .edit()
                             .putBoolean("logged_in", true)
+                            .putString("username", username)
                             .putString("access_token", response.body().getAccessToken())
                             .putString("refresh_token", response.body().getRefreshToken())
                             .putInt("user_id",  response.body().user_id)
@@ -183,7 +184,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onFailure(Call<LoginResponse> call, Throwable t) {
                 // Handle network failure
                 Toast.makeText(LoginActivity.this, "Network error", Toast.LENGTH_SHORT).show();
-                Log.e("LoginActivity", "onFailure: " + t.getMessage());
+                Log.d("LoginActivity", "onFailure: " + t.getMessage());
             }
         });
     }

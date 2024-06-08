@@ -19,7 +19,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiClient {
-    private static final String BASE_URL = "https://192.168.0.25:8443";
+    private static final String BASE_URL = "http://192.168.0.166:8443";
     private static SharedPreferences sharedPreferences;
     private static Retrofit retrofit;
 
@@ -32,8 +32,10 @@ public class ApiClient {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
     }
-    public static OkHttpClient getSecureOkHttpClient(Context context) {
+    public static OkHttpClient getSecureOkHttpClient(Context context, SharedPreferences varSharedPreferences) {
         try {
+            sharedPreferences = varSharedPreferences;
+
             Retrofit tokenRetrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)
                     .addConverterFactory(GsonConverterFactory.create())
@@ -62,7 +64,7 @@ public class ApiClient {
 
             // Create and return an OkHttpClient that uses the SSLContext
             return new OkHttpClient.Builder()
-                    .sslSocketFactory(sslContext.getSocketFactory(), (X509TrustManager) trustManagerFactory.getTrustManagers()[0])
+                    // .sslSocketFactory(sslContext.getSocketFactory(), (X509TrustManager) trustManagerFactory.getTrustManagers()[0])
                     .addInterceptor(new AuthInterceptor(sharedPreferences))
                     .authenticator(new TokenAuthenticator(apiService, sharedPreferences))
                     .build();

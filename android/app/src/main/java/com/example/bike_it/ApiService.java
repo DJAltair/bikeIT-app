@@ -27,8 +27,8 @@ public interface ApiService {
     @POST("auth/refresh")
     Call<RefreshResponse> refreshToken(@Body RefreshRequest refreshRequest);
 
-    @GET("api/user/{id}")
-    Call<ApiUserIDResponse> userProfile(@Path("id") String id);
+    @GET("api/profile/{username}")
+    Call<ApiUserIDResponse> userProfile(@Path("username") String username);
 
     @GET("api/posts")
     Call<List<ApiPostsResponse>> getPosts();

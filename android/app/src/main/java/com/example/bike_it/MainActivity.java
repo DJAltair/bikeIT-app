@@ -1,5 +1,6 @@
 package com.example.bike_it;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -49,7 +50,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ApiClient.createRetrofitInstance(getSharedPreferences("user_prefs", MODE_PRIVATE), ApiClient.getSecureOkHttpClient(this));
+        {
+            SharedPreferences pref = getSharedPreferences("user_prefs", MODE_PRIVATE);
+            ApiClient.createRetrofitInstance(pref, ApiClient.getSecureOkHttpClient(this, pref));
+        }
 
         tryRefreshToken();
 
@@ -99,10 +103,10 @@ public class MainActivity extends AppCompatActivity {
         TextView navHeaderTitle = headerView.findViewById(R.id.nav_header_title);
         TextView navHeaderSubtitle = headerView.findViewById(R.id.nav_header_subtitle);
 
-        int user_id = getSharedPreferences("user_prefs", MODE_PRIVATE)
-                .getInt("user_id", -1);
+        String user_id = getSharedPreferences("user_prefs", MODE_PRIVATE)
+                .getString("username", null);
 
-        if(user_id == -1)
+        if(user_id == null)
         {
             navHeaderTitle.setText("Anonymous");
             navHeaderSubtitle.setText("Anonymous");
@@ -113,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
         ApiService apiService = ApiClient.getRetrofitInstance().create(ApiService.class);
         RefreshRequest refreshRequest = new RefreshRequest();
 
-        Call<ApiUserIDResponse> call = apiService.userProfile(Integer.toString(user_id));
+        Call<ApiUserIDResponse> call = apiService.userProfile(user_id);
         call.enqueue(new Callback<ApiUserIDResponse>() {
             @Override
             public void onResponse(Call<ApiUserIDResponse> call, Response<ApiUserIDResponse> response) {
