@@ -6,10 +6,10 @@ public class ApiPostsResponse {
     private int id;
     private String title;
     private String content;
-
     private String createdAt;
     private String username;
 
+    private String imageBase64;
     private String postPrivacy;
 
     // Getters and Setters
@@ -59,6 +59,10 @@ public class ApiPostsResponse {
 
     public void setPostPrivacy(String postPrivacy) {
         this.postPrivacy = postPrivacy;
+    }
+
+    public String getImage() {
+        return imageBase64;
     }
 }
 

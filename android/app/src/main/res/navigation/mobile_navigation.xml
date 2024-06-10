@@ -12,6 +12,12 @@
         tools:layout="@layout/fragment_post_list" />
 
     <fragment
+        android:id="@+id/nav_friends"
+        android:name="com.example.bike_it.ui.friends.FriendsFragment"
+        android:label="@string/menu_friends"
+        tools:layout="@layout/fragment_friends" />
+
+    <fragment
         android:id="@+id/nav_home"
         android:name="com.example.bike_it.ui.home.HomeFragment"
         android:label="@string/menu_home"
@@ -22,6 +28,12 @@
         android:name="com.example.bike_it.ui.gallery.GalleryFragment"
         android:label="@string/menu_gallery"
         tools:layout="@layout/fragment_gallery" />
+
+    <fragment
+        android:id="@+id/nav_maps"
+        android:name="com.example.bike_it.ui.maps.MapListFragment"
+        android:label="@string/menu_maps"
+        tools:layout="@layout/fragment_map_list" />
 
     <fragment
         android:id="@+id/nav_slideshow"
