@@ -5,11 +5,55 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/textViewMapName"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="18sp"
-        android:padding="16dp"/>
+        android:orientation="vertical"
+        >
+        <TextView
+            android:id="@+id/textViewMapName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:padding="16dp"
+            android:layout_alignParentLeft="true"
+            />
+
+        <ImageView
+            android:id="@+id/postImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true" />
+
+        <LinearLayout
+            android:id="@+id/linearLayoutButtons"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            >
+
+            <Button
+                android:id="@+id/buttonShareMap"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="16dp"
+                android:text="Share"
+                android:padding="16dp"
+                />
+
+            <Button
+                android:id="@+id/buttonDeleteMap"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="16dp"
+                android:text="Delete"
+                android:padding="16dp"
+                />
+
+        </LinearLayout>
+
+    </LinearLayout>
 
 </RelativeLayout>

@@ -26,6 +26,9 @@
     <string name="delete_post">Delete Post</string>
     <string name="update_post">Update Post</string>
 
+    <string name="share_post">Share Post</string>
+    <string name="cancel_post_creation">Cancel</string>
+
     <string name="lorem_ipsum">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris
         volutpat, dolor id interdum ullamcorper, risus dolor egestas lectus, sit amet mattis purus
