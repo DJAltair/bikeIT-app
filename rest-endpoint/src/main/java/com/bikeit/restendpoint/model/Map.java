@@ -10,36 +10,28 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Setter
-public class Post {
+public class Map {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String title;
-
-    @Lob
-    private String content;
+    private LocalDateTime createdAt;
 
     @Lob
     private String imageBase64;
 
-    private PrivacyStatus postPrivacy;
-
-    private LocalDateTime createdAt;
+    private String points;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     @JsonIgnore
     private User user;
 
-    public Post() {}
-
-    public Post(String title, String content, User user, PrivacyStatus postPrivacy, String imageBase64) {
-        this.title = title;
-        this.content = content;
-        this.user = user;
-        this.postPrivacy = postPrivacy;
-        this.createdAt = LocalDateTime.now();
+    public Map() {}
+    public Map(String imageBase64, String points, User user) {
         this.imageBase64 = imageBase64;
+        this.points = points;
+        this.user = user;
+        this.createdAt = LocalDateTime.now();
     }
 }

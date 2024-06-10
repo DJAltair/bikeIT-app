@@ -18,9 +18,6 @@ public class FriendRequestService {
     @Autowired
     private FriendshipRepository friendshipRepository;
 
-    @Autowired
-    private UserRepository userRepository;
-
     public void sendFriendRequest(User sender, User receiver) {
         if (sender.getId().equals(receiver.getId())) {
             throw new IllegalArgumentException("Sender and receiver cannot be the same user!");

@@ -20,14 +20,11 @@ public class FriendshipController {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private UserRepository userRepository;
-
     @GetMapping("/friends")
     public ResponseEntity<Set<User>> getFriends() {
         try {
             String username = userService.getCurrentUsername();
-            User currentUser = userRepository.findByUsername(username);
+            User currentUser = userService.findByUsername(username);
             Set<User> friends = friendshipService.getFriends(currentUser);
             return ResponseEntity.ok().body(friends);
         } catch (IllegalArgumentException e) {
@@ -41,8 +38,8 @@ public class FriendshipController {
     public ResponseEntity<?> deleteFriend(@RequestBody FriendUsernameDto friendUsernameDto) {
         try {
             String currentUsername = userService.getCurrentUsername();
-            User currentUser = userRepository.findByUsername(currentUsername);
-            User friend = userRepository.findByUsername(friendUsernameDto.getUsername());
+            User currentUser = userService.findByUsername(currentUsername);
+            User friend = userService.findByUsername(friendUsernameDto.getUsername());
             if(!friendshipService.deleteFriends(currentUser, friend)) throw new IllegalArgumentException("Friend deletion failed");
             return ResponseEntity.ok().build();
         } catch (IllegalArgumentException e) {

@@ -23,9 +23,6 @@ public class PostService {
     private PostRepository postRepository;
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
     private UserService userService;
 
     @Autowired
@@ -33,7 +30,7 @@ public class PostService {
 
     public List<PostDto> getAllPosts() {
         String currentUsername = userService.getCurrentUsername();
-        User currentUser = userRepository.findByUsername(currentUsername);
+        User currentUser = userService.findByUsername(currentUsername);
 
         return postRepository.findAll().stream()
                 .filter(post -> canViewPost(post, currentUser))
@@ -43,7 +40,7 @@ public class PostService {
 
     public List<PostDto> getPostsByUsername(String username) {
         String currentUsername = userService.getCurrentUsername();
-        User currentUser = userRepository.findByUsername(currentUsername);
+        User currentUser = userService.findByUsername(currentUsername);
 
         return postRepository.findAll().stream()
                 .filter(post -> canViewPost(post, currentUser))
@@ -54,7 +51,7 @@ public class PostService {
 
     public Optional<PostDto> getPostById(Long id) {
         String currentUsername = userService.getCurrentUsername();
-        User currentUser = userRepository.findByUsername(currentUsername);
+        User currentUser = userService.findByUsername(currentUsername);
 
         return postRepository.findById(id)
                 .filter(post -> canViewPost(post, currentUser))
@@ -80,7 +77,7 @@ public class PostService {
 
     public PostDto createPost(Post post) {
         String username = userService.getCurrentUsername();
-        User user = userRepository.findByUsername(username);
+        User user = userService.findByUsername(username);
         if (user == null) {
             throw new IllegalArgumentException("User not found");
         }

@@ -98,6 +98,10 @@ public class UserService implements UserDetailsService {
         }
     }
 
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
+
     @Transactional
     public Optional<UserProfileDto> updateUserProfile(String username, UpdateUserProfileDto updateUserProfileDto) {
         String currentUsername = getCurrentUsername();
