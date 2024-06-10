@@ -1,8 +1,8 @@
 package com.bikeit.restendpoint;
 
+import com.bikeit.restendpoint.model.*;
 import com.bikeit.restendpoint.model.Dto.RegistrationDto;
-import com.bikeit.restendpoint.model.Post;
-import com.bikeit.restendpoint.model.PrivacyStatus;
+import com.bikeit.restendpoint.repository.FriendshipRepository;
 import com.bikeit.restendpoint.repository.PostRepository;
 import com.bikeit.restendpoint.service.PostService;
 import com.bikeit.restendpoint.service.RoleService;
@@ -13,7 +13,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
-import com.bikeit.restendpoint.model.Role;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -37,7 +36,7 @@ public class RestEndpointApplication {
 	}
 
 	@Bean
-	CommandLineRunner run(UserService userService, RoleService roleService, PostRepository postRepository) {
+	CommandLineRunner run(UserService userService, RoleService roleService, PostRepository postRepository, FriendshipRepository friendshipRepository) {
 		return args -> {
 			Role roleAdmin = roleService.save(new Role(Role.ROLE_ADMIN));
 			Role roleUser = roleService.save(new Role(Role.ROLE_USER));
@@ -55,6 +54,7 @@ public class RestEndpointApplication {
 			postRepository.save(new Post("Wycieczka nad morze", "Pojechałem z rodzinką nad morze", userService.getByUsername("redskittlefox"), PrivacyStatus.PUBLIC, image));
 			postRepository.save(new Post("Wycieczka nad jezioro", "Pojechałem z rodzinką nad jezioro", userService.getByUsername("djaltair"), PrivacyStatus.PRIVATE, image));
 			postRepository.save(new Post("Wycieczka na Sybir", "Pojechałem z rodzinką na Sybir", userService.getByUsername("djaltair"), PrivacyStatus.PUBLIC, image));
+			friendshipRepository.save(new Friendship(userService.getByUsername("djaltair"), userService.getByUsername("redskittlefox"), FriendshipStatus.ACCEPTED));
 		};
 	}
 

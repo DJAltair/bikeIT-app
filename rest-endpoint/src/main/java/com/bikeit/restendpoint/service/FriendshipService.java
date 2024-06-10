@@ -1,5 +1,7 @@
 package com.bikeit.restendpoint.service;
 
+import com.bikeit.restendpoint.model.Friendship;
+import com.bikeit.restendpoint.model.FriendshipStatus;
 import com.bikeit.restendpoint.model.User;
 import com.bikeit.restendpoint.repository.FriendshipRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,15 @@ public class FriendshipService {
     private FriendshipRepository friendshipRepository;
 
     public Set<User> getFriends(User user) {
-        return user.getFriends();
+        Set<User> friends = friendshipRepository.findAcceptedFriendsOfUser(user, FriendshipStatus.ACCEPTED);
+        friends.remove(user);
+        return friends;
+    }
+
+    public boolean deleteFriends(User user, User friend) {
+        Friendship friendship = friendshipRepository.findFriendshipByUsers(user, friend);
+        if(friendship == null) return false;
+        friendshipRepository.delete(friendship);
+        return true;
     }
 }

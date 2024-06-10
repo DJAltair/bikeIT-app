@@ -19,4 +19,12 @@ public class Friendship {
     private User receiver;
 
     private FriendshipStatus status;
+
+    public Friendship() {}
+
+    public Friendship(User sender, User receiver, FriendshipStatus status) {
+        this.sender = sender;
+        this.receiver = receiver;
+        this.status = status;
+    }
 }

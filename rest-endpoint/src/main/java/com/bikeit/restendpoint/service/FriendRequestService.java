@@ -5,11 +5,13 @@ import com.bikeit.restendpoint.model.FriendshipStatus;
 import com.bikeit.restendpoint.model.User;
 import com.bikeit.restendpoint.repository.FriendshipRepository;
 import com.bikeit.restendpoint.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class FriendRequestService {
@@ -32,60 +34,39 @@ public class FriendRequestService {
             throw new IllegalStateException("You are already friends!");
         }
 
-        Friendship friendship = new Friendship();
-        friendship.setSender(sender);
-        friendship.setReceiver(receiver);
-        friendship.setStatus(FriendshipStatus.PENDING);
+        Friendship friendship = new Friendship(sender, receiver, FriendshipStatus.PENDING);
         friendshipRepository.save(friendship);
     }
 
-    public void acceptFriendRequest(User receiver, Long friendshipId) {
-        Optional<Friendship> friendship = friendshipRepository.findById(friendshipId);
-
-        if(friendship.isEmpty()) throw new IllegalArgumentException("Friend request doesn't exist!");
-
-        if (!friendship.get().getReceiver().equals(receiver)) {
-            throw new IllegalArgumentException("Only the receiver can accept friend requests!");
+    @Transactional
+    public void acceptFriendRequest(User sender, User receiver) {
+        List<Friendship> friendships = friendshipRepository.findBySenderOrReceiverAndStatus(sender, receiver, FriendshipStatus.PENDING);
+        if (friendships.size() != 1) {
+            throw new IllegalArgumentException("Friend request doesn't exist!");
         }
-
-        if (friendship.get().getStatus() != FriendshipStatus.PENDING) {
+        Friendship friendship = friendships.get(0);
+        if (friendship.getStatus() != FriendshipStatus.PENDING) {
             throw new IllegalStateException("Cannot accept a non-pending friend request!");
         }
-
-        friendship.get().setStatus(FriendshipStatus.ACCEPTED);
-        friendshipRepository.save(friendship.get());
-
-        User sender = friendship.get().getSender();
-
-        if (!receiver.getFriends().contains(sender)) {
-            receiver.getFriends().add(sender);
-            userRepository.save(receiver);
-        }
-
-        if (!sender.getFriends().contains(receiver)) {
-            sender.getFriends().add(receiver);
-            userRepository.save(sender);
-        }
+        friendshipRepository.updateStatus(friendship.getId(), FriendshipStatus.ACCEPTED);
     }
 
-    public void declineFriendRequest(User receiver, Long friendshipId) {
-        Optional<Friendship> friendship = friendshipRepository.findById(friendshipId);
-
-        if(friendship.isEmpty()) throw new IllegalArgumentException("Friend request doesn't exist!");
-
-        if (!friendship.get().getReceiver().equals(receiver)) {
-            throw new IllegalArgumentException("Only the receiver can decline friend requests");
+    @Transactional
+    public void declineFriendRequest(User sender, User receiver) {
+        List<Friendship> friendships = friendshipRepository.findBySenderOrReceiverAndStatus(sender, receiver, FriendshipStatus.PENDING);
+        if (friendships.size() != 1) {
+            throw new IllegalArgumentException("Friend request doesn't exist!");
         }
-
-        if (friendship.get().getStatus() != FriendshipStatus.PENDING) {
+        Friendship friendship = friendships.get(0);
+        if (friendship.getStatus() != FriendshipStatus.PENDING) {
             throw new IllegalStateException("Cannot decline a non-pending friend request!");
         }
-
-        friendship.get().setStatus(FriendshipStatus.DECLINED);
-        friendshipRepository.save(friendship.get());
+        friendshipRepository.updateStatus(friendship.getId(), FriendshipStatus.DECLINED);
     }
 
-    public List<Friendship> getFriendRequests(User receiver) {
-        return friendshipRepository.findBySenderOrReceiverAndStatus(null, receiver, FriendshipStatus.PENDING);
+    public Set<User> getPotentialFriends(User user) {
+        Set<User> friends = friendshipRepository.findPendingFriendsForUser(user, FriendshipStatus.PENDING);
+        friends.remove(user);
+        return friends;
     }
 }

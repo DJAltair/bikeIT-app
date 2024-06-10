@@ -43,13 +43,6 @@ public class User {
     )
     private Collection<Role> roles = new ArrayList<>();
 
-    @ManyToMany
-    @JsonIgnore
-    @JoinTable(name = "friendships",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "friend_id"))
-    private Set<User> friends = new HashSet<>();
-
     public User() {}
 
     public User(String name, String username, String password, Collection<Role> roles) {
