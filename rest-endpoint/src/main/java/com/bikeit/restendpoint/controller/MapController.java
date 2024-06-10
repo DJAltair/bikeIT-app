@@ -48,6 +48,20 @@ public class MapController {
         }
     }
 
+    @GetMapping("/map/{id}")
+    public ResponseEntity<Map> getMap(@PathVariable Long id) {
+        try {
+            String username = userService.getCurrentUsername();
+            User currentUser = userService.findByUsername(username);
+            Map map = mapService.getMap(id, currentUser);
+            return ResponseEntity.ok().body(map);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.notFound().build();
+        } catch (SecurityException e) {
+            return ResponseEntity.status(403).build();
+        }
+    }
+
     @DeleteMapping("/map/{id}")
     public ResponseEntity<Void> deleteMap(@PathVariable Long id) {
         try {

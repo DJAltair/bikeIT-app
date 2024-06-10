@@ -19,6 +19,13 @@ public class MapService {
         return mapRepository.findByUser(user);
     }
 
+    public Map getMap(Long id, User currentUser) {
+        Optional<Map> map = mapRepository.findById(id);
+        if(map.isEmpty()) {throw new IllegalArgumentException("Map not found");}
+        if(!map.get().getUser().equals(currentUser)) {throw new IllegalArgumentException("User does not belong to this map");}
+        return map.get();
+    }
+
     public Map uploadMap(MapDto mapDto, User user) {
         Map map = new Map(mapDto.getImageBase64(), mapDto.getPoints(), user);
         mapRepository.save(map);
