@@ -130,11 +130,11 @@ public class ProfileActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     // Handle successful login
                     for (ApiPostsResponse r : response.body()) {
-                        postList.add(new Post(r.getContent(), r.getCreatedAt(), r.getUsername()));
+                        postList.add(new Post(r));
                     }
 
                 } else {
-                    postList.add(new Post("<Failed to load posts>", "<Networking Error>", "<Networking Error>"));
+                    postList.add(new Post("<Failed to load posts>", "<Failed to load posts>", "<Networking Error>", "<Networking Error>", null, 0));
                 }
 
                 adapter = new PostAdapter(postList);
