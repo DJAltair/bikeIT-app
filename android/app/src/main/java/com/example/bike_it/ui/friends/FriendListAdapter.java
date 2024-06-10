@@ -2,6 +2,7 @@ package com.example.bike_it.ui.friends;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,12 +14,21 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.bike_it.ApiClient;
+import com.example.bike_it.ApiService;
+import com.example.bike_it.requests.UsernameRequest;
 import com.example.bike_it.responses.ApiFriendshipsUsers;
 import com.example.bike_it.R;
 import com.example.bike_it.ui.post.PostActivity;
 import com.example.bike_it.ui.profile.ProfileActivity;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class FriendListAdapter extends ArrayAdapter<ApiFriendshipsUsers> {
 
@@ -67,7 +77,8 @@ public class FriendListAdapter extends ArrayAdapter<ApiFriendshipsUsers> {
             deleteFriendBtn.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            int a = 5;
+
+                            doUnfriend(friend);
                         }
                     }
             );
@@ -81,8 +92,9 @@ public class FriendListAdapter extends ArrayAdapter<ApiFriendshipsUsers> {
             Button rejectFriendBtn = acceptRejectLayout.findViewById(R.id.buttonRejectFriendRequest);
             acceptFriendBtn.setOnClickListener(new View.OnClickListener() {
                                                    @Override
-                                                   public void onClick(View v) {
-                                                       int a = 5;
+                                                   public void onClick(View v)
+                                                   {
+                                                       doAcceptFriendRequest(friend);
                                                    }
                                                }
             );
@@ -90,7 +102,7 @@ public class FriendListAdapter extends ArrayAdapter<ApiFriendshipsUsers> {
             rejectFriendBtn.setOnClickListener(new View.OnClickListener() {
                                                    @Override
                                                    public void onClick(View v) {
-                                                       int a = 5;
+                                                       doRejectFriendRequest(friend);
                                                    }
                                                }
             );
@@ -102,11 +114,88 @@ public class FriendListAdapter extends ArrayAdapter<ApiFriendshipsUsers> {
             addFriendBtn.setOnClickListener(new View.OnClickListener() {
                                                    @Override
                                                    public void onClick(View v) {
-                                                       int a = 5;
+
+                                                       doBefriend(friend);
                                                    }
                                                }
             );
         }
         return listItemView;
+    }
+
+    void doBefriend(ApiFriendshipsUsers user)
+    {
+        ApiService apiService = ApiClient.getRetrofitInstance().create(ApiService.class);
+
+        Call<ResponseBody> call = apiService.befriend(new UsernameRequest(user.getUsername()));
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                remove(user);
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.d("FriendsFragment", "onFailure: " + t.getMessage());
+
+            }
+        });
+    }
+
+    void doUnfriend(ApiFriendshipsUsers user)
+    {
+        ApiService apiService = ApiClient.getRetrofitInstance().create(ApiService.class);
+
+        Call<ResponseBody> call = apiService.unfriend(new UsernameRequest(user.getUsername()));
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                remove(user);
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.d("FriendsFragment", "onFailure: " + t.getMessage());
+
+            }
+        });
+    }
+
+    void doAcceptFriendRequest(ApiFriendshipsUsers user)
+    {
+        ApiService apiService = ApiClient.getRetrofitInstance().create(ApiService.class);
+
+        Call<ResponseBody> call = apiService.acceptFriendRequest(new UsernameRequest(user.getUsername()));
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                remove(user);
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.d("FriendsFragment", "onFailure: " + t.getMessage());
+
+            }
+        });
+    }
+
+    void doRejectFriendRequest(ApiFriendshipsUsers user)
+    {
+        ApiService apiService = ApiClient.getRetrofitInstance().create(ApiService.class);
+
+        Call<ResponseBody> call = apiService.denyFriendRequest(new UsernameRequest(user.getUsername()));
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                remove(user);
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.d("FriendsFragment", "onFailure: " + t.getMessage());
+
+            }
+        });
     }
 }

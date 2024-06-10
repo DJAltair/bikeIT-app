@@ -3,6 +3,7 @@ package com.example.bike_it;
 import com.example.bike_it.requests.CreatePostRequest;
 import com.example.bike_it.requests.LoginRequest;
 import com.example.bike_it.requests.RefreshRequest;
+import com.example.bike_it.requests.UsernameRequest;
 import com.example.bike_it.responses.ApiFriendshipsUsers;
 import com.example.bike_it.responses.ApiMap;
 import com.example.bike_it.responses.ApiPostsResponse;
@@ -53,9 +54,23 @@ public interface ApiService {
     Call<ApiPostsResponse> createPost(@Body CreatePostRequest post);
 
     // Friends
-
     @GET("api/friendships/friends")
     Call<List<ApiFriendshipsUsers>> getFriends();
+
+    @GET("api/friendships/friend-requests")
+    Call<List<ApiFriendshipsUsers>> getFriendRequests();
+
+    @POST("api/friendships/befriend")
+    Call<ResponseBody> befriend(@Body UsernameRequest request);
+
+    @POST("api/friendships/unfriend")
+    Call<ResponseBody> unfriend(@Body UsernameRequest request);
+
+    @POST("api/friendships/accept-friend-request")
+    Call<ResponseBody> acceptFriendRequest(@Body UsernameRequest request);
+
+    @POST("api/friendships/deny-friend-request")
+    Call<ResponseBody> denyFriendRequest(@Body UsernameRequest request);
 
     // MAPS
 

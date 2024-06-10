@@ -70,7 +70,6 @@ public class FriendsFragment extends Fragment {
         friends.add(new ApiFriendshipsUsers());
 
         pendingFriends = new ArrayList<>();
-        pendingFriends.add(new ApiFriendshipsUsers("djaltair", "djaltair"));
 
         fetchRequests();
         fetchFriends();
@@ -96,9 +95,30 @@ public class FriendsFragment extends Fragment {
 
     void fetchRequests()
     {
-        updateRequestsViews();
-    }
+        ApiService apiService = ApiClient.getRetrofitInstance().create(ApiService.class);
 
+        Call<List<ApiFriendshipsUsers>> call = apiService.getFriendRequests();
+        call.enqueue(new Callback<List<ApiFriendshipsUsers>>() {
+            @Override
+            public void onResponse(Call<List<ApiFriendshipsUsers>> call, Response<List<ApiFriendshipsUsers>> response) {
+                pendingFriends = new ArrayList<>();
+
+                if (response.isSuccessful() && response.body() != null) {
+                    pendingFriends = response.body();
+                } else {
+
+                }
+
+                updateRequestsViews();
+            }
+
+            @Override
+            public void onFailure(Call<List<ApiFriendshipsUsers>> call, Throwable t) {
+                Log.d("FriendsFragment", "onFailure: " + t.getMessage());
+
+            }
+        });
+    }
 
     void fetchFriends()
     {
@@ -117,16 +137,12 @@ public class FriendsFragment extends Fragment {
 
                 }
 
-                friends.add(new ApiFriendshipsUsers());
-
                 updateFriendsViews();
             }
 
             @Override
             public void onFailure(Call<List<ApiFriendshipsUsers>> call, Throwable t) {
-                // Handle network failure
-                // Toast.makeText(PostListFragment.this, "Network error", Toast.LENGTH_SHORT).show();
-                Log.d("LoginActivity", "onFailure: " + t.getMessage());
+                Log.d("FriendsFragment", "onFailure: " + t.getMessage());
 
             }
         });
