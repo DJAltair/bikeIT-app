@@ -3,13 +3,67 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="horizontal">
 
-<TextView
-    android:id="@+id/textViewFriendName"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:textSize="18sp"
-    android:padding="16dp"/>
+    <TextView
+        android:id="@+id/textViewFriendName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:textSize="18sp" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/buttonAddFriend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="16dp"
+            android:padding="16dp"
+            android:text="Invite"
+            android:visibility="invisible" />
+
+        <Button
+            android:id="@+id/buttonDeleteFriend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="16dp"
+            android:text="Unfriend"
+            android:padding="16dp"
+            android:visibility="invisible"
+            />
+
+        <LinearLayout
+            android:id="@+id/linearLayoutFriendRequest"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:visibility="invisible"
+            >
+            <Button
+                android:id="@+id/buttonAcceptFriendRequest"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="16dp"
+                android:text="Accept"
+                android:padding="16dp"
+                />
+            <Button
+                android:id="@+id/buttonRejectFriendRequest"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="16dp"
+                android:text="Decline"
+                android:padding="16dp"
+                />
+        </LinearLayout>
+
+    </RelativeLayout>
 
 </RelativeLayout>

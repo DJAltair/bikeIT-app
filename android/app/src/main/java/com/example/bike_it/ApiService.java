@@ -47,4 +47,7 @@ public interface ApiService {
 
     @GET("api/friendships/friends")
     Call<List<ApiFriendshipsUsers>> getFriends();
+
+    @GET("api/friendships/friend-requests")
+    Call<List<ApiFriendshipsUsers>> getFriendRequests();
 }
