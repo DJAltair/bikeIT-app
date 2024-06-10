@@ -2,6 +2,7 @@ package com.example.bike_it;
 
 import com.example.bike_it.requests.CreatePostRequest;
 import com.example.bike_it.requests.LoginRequest;
+import com.example.bike_it.requests.MapRequest;
 import com.example.bike_it.requests.RefreshRequest;
 import com.example.bike_it.requests.UsernameRequest;
 import com.example.bike_it.responses.ApiFriendshipsUsers;
@@ -76,6 +77,9 @@ public interface ApiService {
 
     @GET("api/map/all")
     Call<List<ApiMap>> getAllMaps();
+
+    @POST("api/map")
+    Call<ApiMap> createMap(@Body MapRequest post);
 
     @DELETE("api/map/{id}")
     Call<ResponseBody> deleteMap(@Path("id") int id);

@@ -6,16 +6,42 @@
     android:layout_height="match_parent"
     tools:context=".ui.gallery.GalleryFragment">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/startButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Start"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentStart="true"
+                android:layout_margin="16dp"/>
+
+            <Button
+                android:id="@+id/stopButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Stop"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:layout_margin="16dp"/>
+        </LinearLayout>
 
         <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/map_fragment"
-            android:name="com.tomtom.sdk.map.display.ui.MapFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:mapKey="@string/map_api_key" />
-    </RelativeLayout>
+            android:id="@+id/gmap"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            >
 
+        </androidx.fragment.app.FragmentContainerView>
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -17,6 +17,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Bikeit"
         tools:targetApi="31">
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBzt2zFtCKQTTyuB6HaqL7JRpCZLZi-U8Q" />
         <activity
             android:name=".ui.maps.ShareMapActivity"
             android:exported="false" />

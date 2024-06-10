@@ -65,7 +65,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:onClick="onDeletePostClick"
-            android:text="@string/delete_post" />
+            android:text="@string/delete_post"
+            android:visibility="gone"
+            />
 
         <Button
             android:id="@+id/updatePostButton"
