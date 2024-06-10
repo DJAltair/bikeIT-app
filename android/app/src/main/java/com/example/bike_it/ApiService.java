@@ -1,8 +1,10 @@
 package com.example.bike_it;
 
+import com.example.bike_it.requests.CreatePostRequest;
 import com.example.bike_it.requests.LoginRequest;
 import com.example.bike_it.requests.RefreshRequest;
 import com.example.bike_it.responses.ApiFriendshipsUsers;
+import com.example.bike_it.responses.ApiMap;
 import com.example.bike_it.responses.ApiPostsResponse;
 import com.example.bike_it.responses.ApiUserIDResponse;
 import com.example.bike_it.responses.LoginResponse;
@@ -33,6 +35,8 @@ public interface ApiService {
     @GET("api/profile/{username}")
     Call<ApiUserIDResponse> userProfile(@Path("username") String username);
 
+    // Posty
+
     @GET("api/posts")
     Call<List<ApiPostsResponse>> getPosts();
 
@@ -45,9 +49,22 @@ public interface ApiService {
     @DELETE("api/post/{id}")
     Call<ResponseBody> deletePost(@Path("id") int id);
 
+    @POST("api/post")
+    Call<ApiPostsResponse> createPost(@Body CreatePostRequest post);
+
+    // Friends
+
     @GET("api/friendships/friends")
     Call<List<ApiFriendshipsUsers>> getFriends();
 
-    @GET("api/friendships/friend-requests")
-    Call<List<ApiFriendshipsUsers>> getFriendRequests();
+    // MAPS
+
+    @GET("api/map/all")
+    Call<List<ApiMap>> getAllMaps();
+
+    @DELETE("api/map/{id}")
+    Call<ResponseBody> deleteMap(@Path("id") int id);
+
+    @GET("api/map/{id}")
+    Call<ApiMap> getMap(@Path("id") int id);
 }

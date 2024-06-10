@@ -20,7 +20,7 @@
             />
 
         <ImageView
-            android:id="@+id/postImageView"
+            android:id="@+id/imageViewMap"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true" />

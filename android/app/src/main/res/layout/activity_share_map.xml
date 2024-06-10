@@ -38,20 +38,20 @@
             android:text="Description" />
 
         <ImageView
-            android:id="@+id/postImageView"
+            android:id="@+id/imageViewMap"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true" />
 
         <Button
-            android:id="@+id/deletePostButton"
+            android:id="@+id/sharePostButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:onClick="onDeletePostClick"
             android:text="@string/share_post" />
 
         <Button
-            android:id="@+id/updatePostButton"
+            android:id="@+id/cancelPostButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/cancel_post_creation" />

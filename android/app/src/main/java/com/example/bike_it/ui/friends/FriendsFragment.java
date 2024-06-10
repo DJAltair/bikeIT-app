@@ -65,7 +65,6 @@ public class FriendsFragment extends Fragment {
             }
         });
 
-
         // Create list of friends
         List<ApiFriendshipsUsers> friends = new ArrayList<>();
         friends.add(new ApiFriendshipsUsers());
