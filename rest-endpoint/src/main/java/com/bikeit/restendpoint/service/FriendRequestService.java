@@ -27,11 +27,19 @@ public class FriendRequestService {
         }
 
         if (friendshipRepository.existsBySenderAndReceiverAndStatus(sender, receiver, FriendshipStatus.PENDING)) {
-            throw new IllegalStateException("Friend request already sent!");
+            throw new IllegalStateException("Friend request already sent! You sent the request.");
+        }
+
+        if (friendshipRepository.existsBySenderAndReceiverAndStatus(receiver, sender, FriendshipStatus.PENDING)) {
+            throw new IllegalStateException("Friend request already sent! You received the request.");
         }
 
         if (friendshipRepository.existsBySenderAndReceiverAndStatus(sender, receiver, FriendshipStatus.ACCEPTED)) {
-            throw new IllegalStateException("You are already friends!");
+            throw new IllegalStateException("You are already friends! You sent the request.");
+        }
+
+        if (friendshipRepository.existsBySenderAndReceiverAndStatus(receiver, sender, FriendshipStatus.ACCEPTED)) {
+            throw new IllegalStateException("You are already friends! You received the request.");
         }
 
         Friendship friendship = new Friendship(sender, receiver, FriendshipStatus.PENDING);
@@ -61,7 +69,7 @@ public class FriendRequestService {
         if (friendship.getStatus() != FriendshipStatus.PENDING) {
             throw new IllegalStateException("Cannot decline a non-pending friend request!");
         }
-        friendshipRepository.updateStatus(friendship.getId(), FriendshipStatus.DECLINED);
+        friendshipRepository.delete(friendship);
     }
 
     public Set<User> getPotentialFriends(User user) {

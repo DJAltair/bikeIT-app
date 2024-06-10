@@ -1,5 +1,6 @@
 package com.bikeit.restendpoint.controller;
 
+import com.bikeit.restendpoint.model.Dto.FriendUsernameDto;
 import com.bikeit.restendpoint.model.User;
 import com.bikeit.restendpoint.repository.FriendshipRepository;
 import com.bikeit.restendpoint.repository.UserRepository;
@@ -29,12 +30,12 @@ public class FriendRequestController {
     @Autowired
     private FriendshipRepository friendshipRepository;
 
-    @GetMapping("/befriend/{username}")
-    public ResponseEntity<?> sendFriendRequest(@PathVariable String username) {
+    @PostMapping("/befriend")
+    public ResponseEntity<?> sendFriendRequest(@RequestBody FriendUsernameDto friendUsernameDto) {
         try {
             String currentUsername = userService.getCurrentUsername();
             User sender = userRepository.findByUsername(currentUsername);
-            User receiver = userRepository.findByUsername(username);
+            User receiver = userRepository.findByUsername(friendUsernameDto.getUsername());
 
             if(receiver == null) throw new IllegalArgumentException("Receiver doesn't exist!");
 
@@ -48,15 +49,15 @@ public class FriendRequestController {
         }
     }
 
-    @GetMapping("/accept-friend-request/{username}")
-    public ResponseEntity<?> acceptFriendRequest(@PathVariable String username) {
+    @PostMapping("/accept-friend-request")
+    public ResponseEntity<?> acceptFriendRequest(@RequestBody FriendUsernameDto friendUsernameDto) {
         try {
             String currentUsername = userService.getCurrentUsername();
             User receiver = userRepository.findByUsername(currentUsername);
-            User sender = userRepository.findByUsername(username);
+            User sender = userRepository.findByUsername(friendUsernameDto.getUsername());
 
             Set<User> potentialFriends = friendRequestService.getPotentialFriends(receiver);
-            if(!potentialFriends.contains(receiver)) throw new IllegalArgumentException("Sender not a potential friend!");
+            if(!potentialFriends.contains(sender)) throw new IllegalArgumentException("Sender not a potential friend!");
             friendRequestService.acceptFriendRequest(sender, receiver);
             return ResponseEntity.ok().build();
 
@@ -67,16 +68,16 @@ public class FriendRequestController {
         }
     }
 
-    @GetMapping("/deny-friend-request/{username}")
-    public ResponseEntity<?> declineFriendRequest(@PathVariable String username) {
+    @PostMapping("/deny-friend-request")
+    public ResponseEntity<?> declineFriendRequest(@RequestBody FriendUsernameDto friendUsernameDto) {
         try {
             String currentUsername = userService.getCurrentUsername();
             User receiver = userRepository.findByUsername(currentUsername);
-            User sender = userRepository.findByUsername(username);
+            User sender = userRepository.findByUsername(friendUsernameDto.getUsername());
 
             Set<User> potentialFriends = friendRequestService.getPotentialFriends(receiver);
-            if(!potentialFriends.contains(receiver)) throw new IllegalArgumentException("Sender not a potential friend!");
-            friendRequestService.acceptFriendRequest(sender, receiver);
+            if(!potentialFriends.contains(sender)) throw new IllegalArgumentException("Sender not a potential friend!");
+            friendRequestService.declineFriendRequest(sender, receiver);
             return ResponseEntity.ok().build();
 
         } catch (IllegalArgumentException e) {

@@ -7,6 +7,7 @@ import com.bikeit.restendpoint.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.bikeit.restendpoint.model.Dto.FriendUsernameDto;
 
 import java.util.Set;
 
@@ -36,12 +37,12 @@ public class FriendshipController {
         }
     }
 
-    @GetMapping("/unfriend/{username}")
-    public ResponseEntity<?> deleteFriend(@PathVariable String username) {
+    @PostMapping("/unfriend")
+    public ResponseEntity<?> deleteFriend(@RequestBody FriendUsernameDto friendUsernameDto) {
         try {
             String currentUsername = userService.getCurrentUsername();
             User currentUser = userRepository.findByUsername(currentUsername);
-            User friend = userRepository.findByUsername(username);
+            User friend = userRepository.findByUsername(friendUsernameDto.getUsername());
             if(!friendshipService.deleteFriends(currentUser, friend)) throw new IllegalArgumentException("Friend deletion failed");
             return ResponseEntity.ok().build();
         } catch (IllegalArgumentException e) {
