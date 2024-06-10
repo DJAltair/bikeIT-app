@@ -3,6 +3,7 @@ package com.bikeit.restendpoint;
 import com.bikeit.restendpoint.model.*;
 import com.bikeit.restendpoint.model.Dto.RegistrationDto;
 import com.bikeit.restendpoint.repository.FriendshipRepository;
+import com.bikeit.restendpoint.repository.MapRepository;
 import com.bikeit.restendpoint.repository.PostRepository;
 import com.bikeit.restendpoint.service.PostService;
 import com.bikeit.restendpoint.service.RoleService;
@@ -36,7 +37,7 @@ public class RestEndpointApplication {
 	}
 
 	@Bean
-	CommandLineRunner run(UserService userService, RoleService roleService, PostRepository postRepository, FriendshipRepository friendshipRepository) {
+	CommandLineRunner run(UserService userService, RoleService roleService, PostRepository postRepository, FriendshipRepository friendshipRepository, MapRepository mapRepository) {
 		return args -> {
 			Role roleAdmin = roleService.save(new Role(Role.ROLE_ADMIN));
 			Role roleUser = roleService.save(new Role(Role.ROLE_USER));
@@ -55,6 +56,7 @@ public class RestEndpointApplication {
 			postRepository.save(new Post("Wycieczka nad jezioro", "Pojechałem z rodzinką nad jezioro", userService.getByUsername("djaltair"), PrivacyStatus.PRIVATE, image));
 			postRepository.save(new Post("Wycieczka na Sybir", "Pojechałem z rodzinką na Sybir", userService.getByUsername("djaltair"), PrivacyStatus.PUBLIC, image));
 			friendshipRepository.save(new Friendship(userService.getByUsername("djaltair"), userService.getByUsername("redskittlefox"), FriendshipStatus.ACCEPTED));
+			mapRepository.save(new Map(image, "dupa do dupy", userService.getByUsername("redskittlefox")));
 		};
 	}
 
