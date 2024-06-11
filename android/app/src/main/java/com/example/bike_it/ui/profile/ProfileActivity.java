@@ -89,20 +89,20 @@ public class ProfileActivity extends AppCompatActivity {
             public void onResponse(Call<ApiUserIDResponse> call, Response<ApiUserIDResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     TextView profileNameView = (TextView)findViewById(R.id.profile_name);
-                    TextView profileDescView = (TextView)findViewById(R.id.profile_desc);
+                    // TextView profileDescView = (TextView)findViewById(R.id.profile_desc);
                     TextView profileFullNameView = (TextView)findViewById(R.id.profile_real_name);
 
                     profileNameView.setText(response.body().username);
-                    profileDescView.setText(response.body().description);
+                    // profileDescView.setText(response.body().description);
                     profileFullNameView.setText(response.body().name);
 
                 } else {
                     TextView profileNameView = (TextView)findViewById(R.id.profile_name);
-                    TextView profileDescView = (TextView)findViewById(R.id.profile_desc);
+                    // TextView profileDescView = (TextView)findViewById(R.id.profile_desc);
                     TextView profileFullNameView = (TextView)findViewById(R.id.profile_real_name);
 
                     profileNameView.setText("<network error>");
-                    profileDescView.setText("<network error>");
+                    // profileDescView.setText("<network error>");
                     profileFullNameView.setText("<network error>");
                 }
             }
