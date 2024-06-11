@@ -9,6 +9,7 @@
     <color name="white">#FFFFFFFF</color>
 
     <color name="backgroundColor">#FFFFFF</color>
+    <color name="backgroundColorDark">#000000</color>
     <color name="titleColor">#333333</color>
     <color name="textColor">#666666</color>
     <color name="dateColor">#999999</color>

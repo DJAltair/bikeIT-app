@@ -16,6 +16,8 @@ import com.example.bike_it.ui.profile.ProfileActivity;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -49,7 +51,13 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // updateTheme();
         super.onCreate(savedInstanceState);
+
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
+        setSupportActionBar(binding.appBarMain.toolbar);
 
         {
             SharedPreferences pref = getSharedPreferences("user_prefs", MODE_PRIVATE);
@@ -65,19 +73,15 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
-
-        setSupportActionBar(binding.appBarMain.toolbar);
-
         DrawerLayout drawer = binding.drawerLayout;
         NavigationView navigationView = binding.navView;
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_activity, R.id.nav_home, R.id.nav_gallery, R.id.nav_maps, R.id.nav_slideshow)
-                .setOpenableLayout(drawer)
-                .build();
+                R.id.nav_activity, R.id.nav_gallery, R.id.nav_maps, R.id.nav_slideshow)
+                 .setOpenableLayout(drawer)
+                 .build();
+
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
@@ -86,6 +90,8 @@ public class MainActivity extends AppCompatActivity {
         {
             updateProfileInformation();
         }
+
+        updateTheme();
     }
 
     private void updateProfileInformation()
@@ -163,10 +169,42 @@ public class MainActivity extends AppCompatActivity {
             // Perform logout action here
             logout();
             return true;
+        }
+        else if (item.getItemId() == R.id.action_switch_theme) {
+            Boolean mode = getSharedPreferences("user_prefs", MODE_PRIVATE)
+                    .getBoolean("darkModeEnabled", false);
+
+            mode = !mode;
+
+            getSharedPreferences("user_prefs", MODE_PRIVATE).edit()
+                    .putBoolean("darkModeEnabled", mode)
+                    .apply();
+
+            updateTheme();
+
+            return false;
         } else {
             return super.onOptionsItemSelected(item);
         }
     }
+
+    void updateTheme()
+    {
+        Boolean mode = getSharedPreferences("user_prefs", MODE_PRIVATE)
+                .getBoolean("darkModeEnabled", false);
+
+        if(mode)
+        {
+            if(AppCompatDelegate.getDefaultNightMode() != AppCompatDelegate.MODE_NIGHT_YES)
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        }
+        else
+        {
+            if(AppCompatDelegate.getDefaultNightMode() != AppCompatDelegate.MODE_NIGHT_NO)
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        }
+    }
+
 
     @Override
     public boolean onSupportNavigateUp() {
