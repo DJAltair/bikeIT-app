@@ -10,8 +10,8 @@
 
     <string name="menu_home">Home</string>
     <string name="menu_post_list">Activity</string>
-    <string name="menu_gallery">Gallery</string>
-    <string name="menu_maps">Maps</string>
+    <string name="menu_gallery">Map</string>
+    <string name="menu_maps">Journeys</string>
     <string name="menu_friends">Friends</string>
     <string name="menu_activity">Activity</string>
     <string name="menu_slideshow">Slideshow</string>

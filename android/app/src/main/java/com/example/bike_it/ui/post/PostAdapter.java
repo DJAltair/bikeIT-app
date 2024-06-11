@@ -90,16 +90,18 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
             float width = postLayout.getWidth();
             float height = postLayout.getHeight();
 
-            Button redirectButton = (Button)itemView.findViewById(R.id.postRedirectButton);
+            itemView.setOnClickListener(this);
+
+            // Button redirectButton = (Button)itemView.findViewById(R.id.postRedirectButton);
             // redirectButton.setVisibility(View.INVISIBLE);
 
             // redirectButton.setX(x);
             // redirectButton.setY(y);
             // redirectButton.setWidth((int)width);
-            redirectButton.setHeight((int)height);
+            // redirectButton.setHeight((int)height);
 
 
-            redirectButton.setOnClickListener(this);
+            // redirectButton.setOnClickListener(this);
         }
 
         public void onClick(View view)

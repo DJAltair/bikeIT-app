@@ -137,10 +137,12 @@ public class PostActivity extends AppCompatActivity {
 
         Call<ResponseBody> call = apiService.deletePost(postId);
 
+        Context ctx = this;
+
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                Intent i = new Intent(context, ProfileActivity.class);
+                Intent i = new Intent(ctx, ProfileActivity.class);
 
                 if(post.getAuthor() == null)
                     return;

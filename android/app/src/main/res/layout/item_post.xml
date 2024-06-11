@@ -3,36 +3,49 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:padding="4dp"
+    android:background="@color/backgroundColor"
+    android:onClick="showCurrentProfile"
+    android:clickable="true"
+    >
 
     <LinearLayout
+        android:id="@+id/postLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="bottom"
         android:orientation="vertical"
-        android:id="@+id/postLayout"
-        android:visibility="visible"
-        >
+        android:padding="16dp"
+        android:background="@drawable/background_rounded"
+        android:elevation="4dp"
+        android:layout_marginBottom="4dp">
 
         <TextView
             android:id="@+id/textViewTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Post Title"
-            android:textSize="20sp" />
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="@color/titleColor"
+            android:layout_marginBottom="8dp"/>
 
         <TextView
             android:id="@+id/textViewText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Post Text"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:textColor="@color/textColor"
+            android:layout_marginBottom="8dp"/>
 
         <ImageView
             android:id="@+id/postImageView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true" />
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_centerInParent="true"
+            android:scaleType="centerCrop"
+
+            android:layout_marginBottom="8dp"/>
 
         <TextView
             android:id="@+id/textViewDate"
@@ -40,7 +53,8 @@
             android:layout_height="wrap_content"
             android:text="Post Date"
             android:textSize="12sp"
-            />
+            android:textColor="@color/dateColor"
+            android:layout_marginBottom="4dp"/>
 
         <TextView
             android:id="@+id/textViewAuthor"
@@ -48,18 +62,6 @@
             android:layout_height="wrap_content"
             android:text="Post Author"
             android:textSize="14sp"
-            />
-
+            android:textColor="@color/authorColor"/>
     </LinearLayout>
-
-    <Button
-        android:id="@+id/postRedirectButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_x="0dp"
-        android:layout_y="0dp"
-        android:background="#00FFFF00"
-        android:onClick="showCurrentProfile"
-        android:textColor="#00FFFF00"
-        android:visibility="visible" />
 </RelativeLayout>
