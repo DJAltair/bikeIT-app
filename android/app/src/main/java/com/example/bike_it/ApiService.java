@@ -55,6 +55,9 @@ public interface ApiService {
     Call<ApiPostsResponse> createPost(@Body CreatePostRequest post);
 
     // Friends
+    @GET("api/users")
+    Call<List<ApiFriendshipsUsers>> getUsers();
+
     @GET("api/friendships/friends")
     Call<List<ApiFriendshipsUsers>> getFriends();
 

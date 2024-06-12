@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">bike-it</string>
+    <string name="navigation_drawer_open">Откройте навигационный ящик</string>
+    <string name="navigation_drawer_close">Закройте навигационный ящик</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Навигационный заголовок</string>
+    <string name="action_settings">Настройки</string>
+    <string name="action_logout">Выход</string>
+    <string name="action_switch_theme">Переключить тему</string>
+
+    <string name="button_start_journey">Старт</string>
+    <string name="button_end_journey">Конец</string>
+
+    <string name="button_share_journey">Поделиться</string>
+    <string name="button_delete_journey">Удалить</string>
+
+    <string name="menu_home">Главная</string>
+    <string name="menu_post_list">Активность</string>
+    <string name="menu_gallery">Карта</string>
+    <string name="menu_maps">Путешествия</string>
+    <string name="menu_friends">Друзья</string>
+    <string name="menu_activity">Активности</string>
+    <string name="menu_slideshow">Слайд-шоу</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Привет пустой фрагмент</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">Первый фрагмент</string>
+    <string name="second_fragment_label">Второй фрагмент</string>
+    <string name="next">Следующий</string>
+    <string name="previous">Предыдущий</string>
+
+    <string name="delete_post">Удалить пост</string>
+    <string name="update_post">Обновить пост</string>
+
+    <string name="share_post">Поделиться Постом</string>
+    <string name="cancel_post_creation">Отмена</string>
+    <string name="register">Регистрация</string>
+    <string name="login">Вход</string>
+    <string name="password">Пароль</string>
+    <string name="username">Имя пользователя</string>
+    <string name="email">Почта</string>
+    <string name="new_post">Новая почта</string>
+    <string name="description">Описание</string>
+    <string name="find_friend">Найти друга</string>
+    <string name="created_at">Создан в:</string>
+    <string name="language">Язык</string>
+</resources>

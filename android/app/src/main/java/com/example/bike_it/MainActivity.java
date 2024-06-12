@@ -1,7 +1,10 @@
 package com.example.bike_it;
 
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,6 +37,8 @@ import com.example.bike_it.databinding.ActivityMainBinding;
 import com.tomtom.sdk.map.display.ui.MapFragment;
 import com.tomtom.sdk.map.display.TomTomMap;
 
+import java.util.Locale;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -48,6 +53,8 @@ public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityMainBinding binding;
+
+    static Boolean once = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +99,16 @@ public class MainActivity extends AppCompatActivity {
         }
 
         updateTheme();
+
+        String lang = getSharedPreferences("user_prefs", MODE_PRIVATE)
+                .getString("language", "english");
+
+
+        if(lang != "english" && once == false)
+        {
+            once = true;
+            updateLanguage();
+        }
     }
 
     private void updateProfileInformation()
@@ -182,11 +199,56 @@ public class MainActivity extends AppCompatActivity {
 
             updateTheme();
 
-            return false;
-        } else {
+            return true;
+        }
+        else if (item.getItemId() == R.id.action_switch_language) {
+            String lang = getSharedPreferences("user_prefs", MODE_PRIVATE)
+                    .getString("language", "english");
+
+            if(lang.equals("english"))
+            {
+                lang = "russian";
+            }
+            else
+            {
+                lang = "english";
+            }
+
+            getSharedPreferences("user_prefs", MODE_PRIVATE).edit()
+                    .putString("language", lang)
+                    .apply();
+
+            updateLanguage();
+
+            return true;
+        }else {
             return super.onOptionsItemSelected(item);
         }
     }
+
+    void updateLanguage()
+    {
+        String lang = getSharedPreferences("user_prefs", MODE_PRIVATE)
+                .getString("language", "english");
+
+        if(lang == "english")
+            lang = "en";
+        else
+            lang = "ru";
+
+        Locale myLocale = new Locale(lang);
+        Resources res = getResources();
+        DisplayMetrics dm = res.getDisplayMetrics();
+        Configuration conf = res.getConfiguration();
+        conf.setLocale(myLocale);
+        res.updateConfiguration(conf, dm);
+
+        // Restart activity to apply changes
+        Intent refresh = new Intent(this, MainActivity.class);
+        startActivity(refresh);
+        finish();
+    }
+
 
     void updateTheme()
     {
