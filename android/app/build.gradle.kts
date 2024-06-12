@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
+
 }
 
 val tomtomApiKey: String by project

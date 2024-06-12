@@ -93,7 +93,7 @@ public interface ApiService {
     Call<ApiMap> getMap(@Path("id") int id);
 
     // Notifications
-    @POST("api/notification")
+    @POST("admin/notification")
     Call<ResponseBody> createNotification(@Body GlobalNotificationRequest notification);
 
     @GET("api/notification")

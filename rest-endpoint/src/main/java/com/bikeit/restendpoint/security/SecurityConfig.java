@@ -55,9 +55,10 @@ public class SecurityConfig {
                 }));
 
         http.authorizeHttpRequests((authz) -> authz
-                    .requestMatchers("/auth/**").permitAll()
-                    .requestMatchers("/api/**").authenticated()
-                    .anyRequest().permitAll()
+                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/admin/notification").hasAuthority(Role.ROLE_ADMIN)
+                        .requestMatchers("/api/**").authenticated()
+                        .anyRequest().permitAll()
                 )
                 .httpBasic(withDefaults());
 
