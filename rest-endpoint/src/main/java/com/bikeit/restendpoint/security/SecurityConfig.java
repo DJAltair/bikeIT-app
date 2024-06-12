@@ -55,7 +55,6 @@ public class SecurityConfig {
                 }));
 
         http.authorizeHttpRequests((authz) -> authz
-                    .requestMatchers("/api/users").hasAuthority(Role.ROLE_ADMIN)
                     .requestMatchers("/auth/**").permitAll()
                     .requestMatchers("/api/**").authenticated()
                     .anyRequest().permitAll()
