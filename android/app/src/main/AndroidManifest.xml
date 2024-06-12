@@ -23,10 +23,12 @@
             android:value="AIzaSyBzt2zFtCKQTTyuB6HaqL7JRpCZLZi-U8Q" />
         <activity
             android:name=".ui.maps.ShareMapActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".MainActivity"/>
         <activity
             android:name=".ui.friends.FindFirendActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".MainActivity"/>
         <activity
             android:name=".ui.post.PostActivity"
             android:exported="false"

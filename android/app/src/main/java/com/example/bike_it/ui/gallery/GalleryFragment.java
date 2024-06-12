@@ -3,6 +3,7 @@ package com.example.bike_it.ui.gallery;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
 import java.util.Base64;
@@ -159,7 +160,9 @@ public class GalleryFragment extends Fragment implements OnMapReadyCallback {
         if (polyline != null) {
             polyline.remove();
         }
-        PolylineOptions polylineOptions = new PolylineOptions().addAll(pathPoints);
+        PolylineOptions polylineOptions = new PolylineOptions()
+                .addAll(pathPoints)
+                .color(Color.RED);  // Set the color to red
         polyline = mMap.addPolyline(polylineOptions);
     }
 
