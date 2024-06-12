@@ -14,7 +14,7 @@ public class NotificationController {
     @Autowired
     private NotificationService notificationService;
 
-    @GetMapping("/notification")
+    @PostMapping("/notification")
     public ResponseEntity<Void> getNotification(@RequestBody NotificationDto notificationDto) {
         try {
             notificationService.saveNotification(new Notification(notificationDto.getContent()));
@@ -26,7 +26,7 @@ public class NotificationController {
         }
     }
 
-    @PostMapping("/notification")
+    @GetMapping("/notification")
     public ResponseEntity<Notification> sendNotification() {
         try {
             Notification toSend = notificationService.getLastNotification();
