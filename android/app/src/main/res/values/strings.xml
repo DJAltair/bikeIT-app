@@ -44,5 +44,6 @@
     <string name="description">Description</string>
     <string name="find_friend">Find Friend</string>
     <string name="created_at">Created At:</string>
+    <string name="language">Language</string>
 
 </resources>
