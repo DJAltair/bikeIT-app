@@ -1,12 +1,14 @@
 package com.example.bike_it;
 
 import com.example.bike_it.requests.CreatePostRequest;
+import com.example.bike_it.requests.GlobalNotificationRequest;
 import com.example.bike_it.requests.LoginRequest;
 import com.example.bike_it.requests.MapRequest;
 import com.example.bike_it.requests.RefreshRequest;
 import com.example.bike_it.requests.UsernameRequest;
 import com.example.bike_it.responses.ApiFriendshipsUsers;
 import com.example.bike_it.responses.ApiMap;
+import com.example.bike_it.responses.ApiNotification;
 import com.example.bike_it.responses.ApiPostsResponse;
 import com.example.bike_it.responses.ApiUserIDResponse;
 import com.example.bike_it.responses.LoginResponse;
@@ -89,4 +91,11 @@ public interface ApiService {
 
     @GET("api/map/{id}")
     Call<ApiMap> getMap(@Path("id") int id);
+
+    // Notifications
+    @POST("api/notification")
+    Call<ResponseBody> createNotification(@Body GlobalNotificationRequest notification);
+
+    @GET("api/notification")
+    Call<ApiNotification> getNotifications();
 }
