@@ -35,5 +35,14 @@
 
     <string name="share_post">Share Post</string>
     <string name="cancel_post_creation">Cancel</string>
+    <string name="register">Register</string>
+    <string name="login">Login</string>
+    <string name="password">Password</string>
+    <string name="username">Username</string>
+    <string name="email">Email</string>
+    <string name="new_post">New Post</string>
+    <string name="description">Description</string>
+    <string name="find_friend">Find Friend</string>
+    <string name="created_at">Created At:</string>
 
 </resources>
